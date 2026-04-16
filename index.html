@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finance & Macro Reports</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0f1117; color: #e2e4e9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
+    .header { padding: 3.5rem 2rem 2rem; border-bottom: 0.5px solid #2a2d35; max-width: 960px; margin: 0 auto; }
+    .header-meta { font-size: 11px; color: #6b7280; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .header h1 { font-size: 24px; font-weight: 500; color: #f0f1f3; }
+    .header p { font-size: 14px; color: #8b8f9a; margin-top: 0.6rem; line-height: 1.7; max-width: 560px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; padding: 2rem; max-width: 960px; margin: 0 auto; }
+    .card { background: #181b24; border: 0.5px solid #2a2d35; border-radius: 10px; overflow: hidden; transition: border-color 0.2s, transform 0.2s; display: flex; flex-direction: column; }
+    .card:hover { border-color: #4a5568; transform: translateY(-2px); }
+    .thumb { width: 100%; height: 130px; background: #1a1f2e; display: flex; align-items: center; justify-content: center; border-bottom: 0.5px solid #2a2d35; font-size: 36px; }
+    .card-body { padding: 1rem 1.1rem 1.2rem; flex: 1; display: flex; flex-direction: column; }
+    .card-tag { font-size: 11px; color: #5b8dd4; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.4rem; font-weight: 500; }
+    .card-title { font-size: 15px; font-weight: 500; color: #dde0e8; margin-bottom: 0.4rem; }
+    .card-desc { font-size: 12.5px; color: #6b7280; line-height: 1.6; margin-bottom: 0.75rem; flex: 1; }
+    .card-link { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: #5b8dd4; text-decoration: none; border: 0.5px solid #2a4a7a; border-radius: 5px; padding: 5px 10px; align-self: flex-start; transition: background 0.2s; }
+    .card-link:hover { background: #1a2d4a; }
+    .card-link svg { width: 12px; height: 12px; }
+    .footer { padding: 2.5rem 2rem; text-align: center; color: #3d404a; font-size: 12px; border-top: 0.5px solid #1e2130; max-width: 960px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-meta">Finance Research · Macro Analysis</div>
+    <h1>Economic &amp; Market Reports</h1>
+    <p>Automated reports built with R — covering macro indicators, equity valuations, and monetary policy across major economies.</p>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="thumb">🇺🇸</div>
+      <div class="card-body">
+        <div class="card-tag">Geo · Macro</div>
+        <div class="card-title">United States</div>
+        <div class="card-desc">Fed policy, yield curve, Shiller CAPE, labour market and growth indicators.</div>
+        <a class="card-link" href="reports/us_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb">🇪🇺</div>
+      <div class="card-body">
+        <div class="card-tag">Geo · Macro</div>
+        <div class="card-title">Euro Area</div>
+        <div class="card-desc">ECB rates, Euribor, inflation, PMIs and fiscal dynamics across the eurozone.</div>
+        <a class="card-link" href="reports/eu_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb">🇨🇭</div>
+      <div class="card-body">
+        <div class="card-tag">Geo · Macro</div>
+        <div class="card-title">Switzerland</div>
+        <div class="card-desc">SNB policy, KOF leading indicators, CHF dynamics and Swiss growth outlook.</div>
+        <a class="card-link" href="reports/ch_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb">🌍</div>
+      <div class="card-body">
+        <div class="card-tag">Geo · Global</div>
+        <div class="card-title">World Overview</div>
+        <div class="card-desc">Global growth, trade dynamics, geopolitical risk and cross-country comparisons.</div>
+        <a class="card-link" href="reports/wrl_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb">📈</div>
+      <div class="card-body">
+        <div class="card-tag">Market · Equity</div>
+        <div class="card-title">Equity Index</div>
+        <div class="card-desc">Major equity indices performance, valuations and cross-market comparisons.</div>
+        <a class="card-link" href="reports/equity_index_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb">🔑</div>
+      <div class="card-body">
+        <div class="card-tag">Market · Multi-asset</div>
+        <div class="card-title">Key Index</div>
+        <div class="card-desc">Key cross-asset indicators — rates, spreads, FX and risk sentiment overview.</div>
+        <a class="card-link" href="reports/key_index_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb">🥇</div>
+      <div class="card-body">
+        <div class="card-tag">Market · Commodities</div>
+        <div class="card-title">Gold Fundamentals</div>
+        <div class="card-desc">Gold drivers — real rates, USD, central bank demand and inflation expectations.</div>
+        <a class="card-link" href="reports/gold_fundamentals_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb">₿</div>
+      <div class="card-body">
+        <div class="card-tag">Market · Crypto</div>
+        <div class="card-title">Crypto</div>
+        <div class="card-desc">CoinMarketCap data — dominance, correlations with traditional assets and momentum.</div>
+        <a class="card-link" href="reports/crypto_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb">🚀</div>
+      <div class="card-body">
+        <div class="card-tag">Market · Equity</div>
+        <div class="card-title">Magnificent 7</div>
+        <div class="card-desc">Deep dive on Apple, Microsoft, Nvidia, Alphabet, Amazon, Meta and Tesla.</div>
+        <a class="card-link" href="reports/magnificent_7_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb">🏦</div>
+      <div class="card-body">
+        <div class="card-tag">Market · Fixed Income</div>
+        <div class="card-title">Bond Market</div>
+        <div class="card-desc">Yield curves, sovereign spreads, credit conditions and duration risk.</div>
+        <a class="card-link" href="reports/bond_marketr_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="thumb">📊</div>
+      <div class="card-body">
+        <div class="card-tag">Indicator</div>
+        <div class="card-title">KOF Indicators</div>
+        <div class="card-desc">KOF Economic Barometer and nowcasting signals for the Swiss and global economy.</div>
+        <a class="card-link" href="reports/kof_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Generated with R · Sources: FRED · Yahoo Finance · ECB · Eurostat · OECD · IMF · KOF · CoinMarketCap
+  </div>
+
+</body>
+</html>
