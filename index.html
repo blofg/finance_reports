@@ -452,16 +452,6 @@
         </div>
       </div>
 
-      <div class="rep-card">
-        <div class="rep-thumb">📊</div>
-        <div class="rep-body">
-          <div class="rep-tag">Indicator</div>
-          <div class="rep-title">KOF Indicators</div>
-          <div class="rep-desc">KOF Economic Barometer and nowcasting signals for the Swiss and global economy.</div>
-          <a class="rep-link" href="reports/kof_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -520,7 +510,7 @@
           <div class="rep-tag">Market · Fixed Income</div>
           <div class="rep-title">Bond Market</div>
           <div class="rep-desc">Yield curves, sovereign spreads, credit conditions and duration risk.</div>
-          <a class="rep-link" href="reports/bond_marketr_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          <a class="rep-link" href="reports/bond_market_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
         </div>
       </div>
 
@@ -555,14 +545,33 @@
           <div class="ticker-pulse"></div>
         </div>
         <div class="ticker-body">
-          <div class="ticker-tag">Live · Any Stock</div>
+          <div class="ticker-tag">Equity · Any Stock</div>
           <div class="ticker-title">Custom Ticker Analysis</div>
-          <div class="ticker-desc">Enter any listed ticker to generate a full equity report — price, technicals, risk metrics and financial statements.</div>
+          <div class="ticker-desc">Enter any ticker — the report is generated automatically via GitHub Actions and ready in ~5 min.</div>
+
           <div class="ticker-input-row">
-            <input class="ticker-input" id="ticker-input" type="text" maxlength="6" placeholder="e.g. AAPL" />
-            <button class="ticker-btn" onclick="openTickerReport()">Run →</button>
+            <input class="ticker-input" id="ticker-input" type="text" maxlength="10" placeholder="e.g. NOVO-B" />
+            <button class="ticker-btn" id="ticker-btn" onclick="runTickerReport()">Run &#8594;</button>
           </div>
-          <div class="ticker-note" id="ticker-note">Press Run to open the pre-generated report for this ticker.</div>
+
+          <div id="ticker-status" style="display:none;margin-top:10px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+              <div id="status-dot" style="width:8px;height:8px;border-radius:50%;background:#e8b84b;flex-shrink:0;"></div>
+              <span id="status-text" style="font-size:12px;color:#8b8f9a;"></span>
+            </div>
+            <div style="height:3px;background:#1e2130;border-radius:2px;overflow:hidden;">
+              <div id="status-bar" style="height:100%;width:0%;background:#5b8dd4;border-radius:2px;transition:width 2s linear;"></div>
+            </div>
+            <a id="report-link" href="#" target="_blank" style="display:none;margin-top:10px;font-size:12px;color:#3dd68c;border:0.5px solid #1a4a30;border-radius:5px;padding:5px 12px;text-decoration:none;">Open report &#8594;</a>
+          </div>
+
+          <div class="ticker-note" id="ticker-note">Any listed ticker · Generated in ~5 min via GitHub Actions</div>
+
+          <div style="margin-top:10px;border-top:0.5px solid #2a2d35;padding-top:10px;">
+            <div style="font-size:10px;color:#3a4050;margin-bottom:5px;letter-spacing:.05em;text-transform:uppercase;">GitHub PAT</div>
+            <input type="password" id="pat-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="width:100%;background:#0f1117;border:0.5px solid #3a4050;border-radius:6px;padding:6px 10px;font-size:11px;font-family:monospace;color:#8b8f9a;outline:none;" />
+            <div style="font-size:10px;color:#3a4050;margin-top:4px;">Stored in memory only &#183; never logged</div>
+          </div>
         </div>
       </div>
 
@@ -691,25 +700,174 @@
       }).join('');
     }
 
-    function openTickerReport() {
-      const raw = document.getElementById('ticker-input').value.trim().toUpperCase();
-      if (!raw) {
-        document.getElementById('ticker-note').textContent = 'Please enter a ticker symbol.';
-        document.getElementById('ticker-note').style.color = '#e87a5a';
+    /* ── GitHub Actions config ── */
+    const GH_OWNER    = 'blofg';
+    const GH_REPO_PRIVATE = 'finance_analysis';
+    const GH_WORKFLOW = 'generate_stock_report.yml';
+    const GH_BRANCH   = 'main';
+    const REPORT_BASE = 'https://blofg.github.io/finance_reports/reports/share/custom/';
+
+    /* ── Mag7 direct links ── */
+    const mag7Map = {
+      'AAPL':  'reports/share/mag7/magnificent_aapl_report_html.html',
+      'MSFT':  'reports/share/mag7/magnificent_msft_report_html.html',
+      'NVDA':  'reports/share/mag7/magnificent_nvda_report_html.html',
+      'GOOGL': 'reports/share/mag7/magnificent_googl_report_html.html',
+      'AMZN':  'reports/share/mag7/magnificent_amzn_report_html.html',
+      'META':  'reports/share/mag7/magnificent_meta_report_html.html',
+      'TSLA':  'reports/share/mag7/magnificent_tsla_report_html.html'
+    };
+
+    /* ── UI helpers ── */
+    function setNote(text, color) {
+      const n = document.getElementById('ticker-note');
+      n.textContent = text;
+      n.style.color = color || '#3a4050';
+    }
+    function setStatus(text, dotColor) {
+      document.getElementById('ticker-status').style.display = 'block';
+      document.getElementById('status-text').textContent = text;
+      if (dotColor) document.getElementById('status-dot').style.background = dotColor;
+    }
+    function setBar(pct) {
+      document.getElementById('status-bar').style.width = pct + '%';
+    }
+    function showReportLink(url) {
+      const a = document.getElementById('report-link');
+      a.href = url;
+      a.style.display = 'inline-flex';
+    }
+    function resetUI() {
+      document.getElementById('ticker-btn').disabled = false;
+      document.getElementById('ticker-btn').textContent = 'Run \u2192';
+    }
+
+    /* ── Main entry point ── */
+    async function runTickerReport() {
+      const ticker = document.getElementById('ticker-input').value.trim().toUpperCase();
+      const pat    = document.getElementById('pat-input').value.trim();
+
+      if (!ticker) { setNote('Please enter a ticker symbol.', '#e87a5a'); return; }
+
+      /* Mag7 → direct open, no Actions needed */
+      if (mag7Map[ticker]) {
+        window.open(mag7Map[ticker], '_blank');
+        setNote('Opening ' + ticker + ' report\u2026', '#3dd68c');
+        setTimeout(() => setNote('Any listed ticker \u00b7 Generated in ~5 min via GitHub Actions'), 3000);
         return;
       }
-      const url = 'reports/share/custom/stock_' + raw + '_report_html.html';
-      document.getElementById('ticker-note').textContent = 'Opening report for ' + raw + '…';
-      document.getElementById('ticker-note').style.color = '#3dd68c';
-      window.open(url, '_blank');
-      setTimeout(() => {
-        document.getElementById('ticker-note').textContent = 'Press Run to open the pre-generated report for this ticker.';
-        document.getElementById('ticker-note').style.color = '#3a4050';
-      }, 3000);
+
+      if (!pat) { setNote('Please enter your GitHub PAT below to trigger report generation.', '#e87a5a'); return; }
+
+      /* Disable button while running */
+      document.getElementById('ticker-btn').disabled = true;
+      document.getElementById('ticker-btn').textContent = '\u23f3';
+      document.getElementById('report-link').style.display = 'none';
+      setBar(5);
+      setStatus('Triggering GitHub Actions for ' + ticker + '\u2026', '#e8b84b');
+      setNote('');
+
+      /* ── Step 1: dispatch workflow ── */
+      try {
+        const dispatchRes = await fetch(
+          'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO_PRIVATE + '/actions/workflows/' + GH_WORKFLOW + '/dispatches',
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': 'Bearer ' + pat,
+              'Accept': 'application/vnd.github+json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ ref: GH_BRANCH, inputs: { ticker: ticker } })
+          }
+        );
+
+        if (dispatchRes.status === 404) {
+          setStatus('Workflow not found. Check the file name in your repo.', '#e87a5a'); resetUI(); return;
+        }
+        if (dispatchRes.status === 401 || dispatchRes.status === 403) {
+          setStatus('Invalid PAT or insufficient permissions (needs workflow scope).', '#e87a5a'); resetUI(); return;
+        }
+        if (!dispatchRes.ok) {
+          setStatus('GitHub API error ' + dispatchRes.status, '#e87a5a'); resetUI(); return;
+        }
+      } catch(e) {
+        setStatus('Network error: ' + e.message, '#e87a5a'); resetUI(); return;
+      }
+
+      setBar(15);
+      setStatus('Workflow triggered. Waiting for run to start\u2026', '#e8b84b');
+
+      /* ── Step 2: poll for the run ID (up to 30s) ── */
+      await new Promise(r => setTimeout(r, 5000));
+      let runId = null;
+      for (let i = 0; i < 6; i++) {
+        try {
+          const runsRes = await fetch(
+            'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO_PRIVATE + '/actions/workflows/' + GH_WORKFLOW + '/runs?per_page=5',
+            { headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github+json' } }
+          );
+          const runsData = await runsRes.json();
+          const recent = (runsData.workflow_runs || []).find(r => r.status !== 'completed');
+          if (recent) { runId = recent.id; break; }
+        } catch(e) {}
+        await new Promise(r => setTimeout(r, 5000));
+      }
+
+      if (!runId) {
+        setStatus('Could not find run ID. Check Actions tab in your repo.', '#e8b84b');
+        resetUI(); return;
+      }
+
+      setBar(30);
+      setStatus('Run #' + runId + ' started. Generating report\u2026', '#5b8dd4');
+
+      /* ── Step 3: poll run status (up to 20 min) ── */
+      const startTime = Date.now();
+      const maxWait   = 20 * 60 * 1000;
+      const pollInterval = 15000;
+
+      while (Date.now() - startTime < maxWait) {
+        await new Promise(r => setTimeout(r, pollInterval));
+        const elapsed = Date.now() - startTime;
+        const pct = Math.min(30 + (elapsed / maxWait) * 60, 88);
+        setBar(pct);
+
+        const mins = Math.floor(elapsed / 60000);
+        const secs = Math.floor((elapsed % 60000) / 1000);
+        setStatus('Generating report for ' + ticker + '\u2026 ' + mins + 'm' + secs + 's elapsed', '#5b8dd4');
+
+        try {
+          const runRes = await fetch(
+            'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO_PRIVATE + '/actions/runs/' + runId,
+            { headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/vnd.github+json' } }
+          );
+          const runData = await runRes.json();
+
+          if (runData.status === 'completed') {
+            if (runData.conclusion === 'success') {
+              setBar(100);
+              setStatus('Report ready!', '#3dd68c');
+              document.getElementById('status-dot').style.background = '#3dd68c';
+              const reportUrl = REPORT_BASE + 'stock_' + ticker + '_report_html.html';
+              showReportLink(reportUrl);
+              setNote('Report generated for ' + ticker, '#3dd68c');
+            } else {
+              setStatus('Workflow failed (' + runData.conclusion + '). Check Actions tab in your repo.', '#e87a5a');
+              document.getElementById('status-dot').style.background = '#e87a5a';
+            }
+            resetUI();
+            return;
+          }
+        } catch(e) {}
+      }
+
+      setStatus('Timeout after 20 min. Check the Actions tab manually.', '#e8b84b');
+      resetUI();
     }
 
     document.getElementById('ticker-input').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') openTickerReport();
+      if (e.key === 'Enter') runTickerReport();
     });
   </script>
 
