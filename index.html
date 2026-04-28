@@ -6,23 +6,352 @@
   <title>Finance & Macro Reports</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0f1117; color: #e2e4e9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
-    .header { padding: 3.5rem 2rem 2rem; border-bottom: 0.5px solid #2a2d35; max-width: 960px; margin: 0 auto; }
-    .header-meta { font-size: 11px; color: #6b7280; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
+
+    body {
+      background: #0f1117;
+      color: #e2e4e9;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .header {
+      padding: 3.5rem 2rem 2rem;
+      border-bottom: 0.5px solid #2a2d35;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .header-meta {
+      font-size: 11px;
+      color: #6b7280;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
     .header h1 { font-size: 24px; font-weight: 500; color: #f0f1f3; }
-    .header p { font-size: 14px; color: #8b8f9a; margin-top: 0.6rem; line-height: 1.7; max-width: 560px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; padding: 2rem; max-width: 960px; margin: 0 auto; }
-    .card { background: #181b24; border: 0.5px solid #2a2d35; border-radius: 10px; overflow: hidden; transition: border-color 0.2s, transform 0.2s; display: flex; flex-direction: column; }
-    .card:hover { border-color: #4a5568; transform: translateY(-2px); }
-    .thumb { width: 100%; height: 130px; background: #1a1f2e; display: flex; align-items: center; justify-content: center; border-bottom: 0.5px solid #2a2d35; font-size: 36px; }
-    .card-body { padding: 1rem 1.1rem 1.2rem; flex: 1; display: flex; flex-direction: column; }
-    .card-tag { font-size: 11px; color: #5b8dd4; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.4rem; font-weight: 500; }
-    .card-title { font-size: 15px; font-weight: 500; color: #dde0e8; margin-bottom: 0.4rem; }
-    .card-desc { font-size: 12.5px; color: #6b7280; line-height: 1.6; margin-bottom: 0.75rem; flex: 1; }
-    .card-link { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: #5b8dd4; text-decoration: none; border: 0.5px solid #2a4a7a; border-radius: 5px; padding: 5px 10px; align-self: flex-start; transition: background 0.2s; }
-    .card-link:hover { background: #1a2d4a; }
-    .card-link svg { width: 12px; height: 12px; }
-    .footer { padding: 2.5rem 2rem; text-align: center; color: #3d404a; font-size: 12px; border-top: 0.5px solid #1e2130; max-width: 960px; margin: 0 auto; }
+    .header p {
+      font-size: 14px;
+      color: #8b8f9a;
+      margin-top: 0.6rem;
+      line-height: 1.7;
+      max-width: 560px;
+    }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb {
+      max-width: 1000px;
+      margin: 1.5rem auto 0;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #6b7280;
+      min-height: 20px;
+    }
+    .breadcrumb span { cursor: pointer; transition: color .15s; }
+    .breadcrumb span:hover { color: #5b8dd4; }
+    .breadcrumb .sep { color: #3a3d45; }
+    .breadcrumb .current { color: #c4c8d4; cursor: default; }
+
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+      padding: 1.75rem 2rem 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* ── Category card (top level) ── */
+    .cat-card {
+      background: #181b24;
+      border: 0.5px solid #2a2d35;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color .2s, transform .2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .cat-card:hover { border-color: #4a5568; transform: translateY(-2px); }
+
+    .cat-thumb {
+      width: 100%;
+      height: 110px;
+      background: #1a1f2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 0.5px solid #2a2d35;
+      font-size: 40px;
+    }
+    .cat-body { padding: 1rem 1.1rem 1.25rem; flex: 1; display: flex; flex-direction: column; }
+    .cat-tag {
+      font-size: 11px;
+      color: #5b8dd4;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: .35rem;
+      font-weight: 500;
+    }
+    .cat-title { font-size: 16px; font-weight: 500; color: #dde0e8; margin-bottom: .35rem; }
+    .cat-desc { font-size: 12.5px; color: #6b7280; line-height: 1.6; flex: 1; }
+    .cat-arrow {
+      margin-top: .85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: #5b8dd4;
+      border: 0.5px solid #2a4a7a;
+      border-radius: 5px;
+      padding: 5px 10px;
+      align-self: flex-start;
+      transition: background .2s;
+    }
+    .cat-arrow:hover { background: #1a2d4a; }
+
+    /* ── Report card (second level) ── */
+    .rep-card {
+      background: #181b24;
+      border: 0.5px solid #2a2d35;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color .2s, transform .2s;
+    }
+    .rep-card:hover { border-color: #4a5568; transform: translateY(-2px); }
+    .rep-thumb {
+      width: 100%;
+      height: 90px;
+      background: #1a1f2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 0.5px solid #2a2d35;
+      font-size: 32px;
+    }
+    .rep-body { padding: .85rem 1rem 1.1rem; flex: 1; display: flex; flex-direction: column; }
+    .rep-tag {
+      font-size: 11px;
+      color: #5b8dd4;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: .3rem;
+      font-weight: 500;
+    }
+    .rep-title { font-size: 14.5px; font-weight: 500; color: #dde0e8; margin-bottom: .3rem; }
+    .rep-desc { font-size: 12px; color: #6b7280; line-height: 1.55; flex: 1; }
+    .rep-link {
+      margin-top: .75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: #5b8dd4;
+      text-decoration: none;
+      border: 0.5px solid #2a4a7a;
+      border-radius: 5px;
+      padding: 5px 10px;
+      align-self: flex-start;
+      transition: background .2s;
+    }
+    .rep-link:hover { background: #1a2d4a; }
+    .rep-link svg { width: 12px; height: 12px; }
+
+    /* clickable rep-card acting as drill-down */
+    .rep-card.drill {
+      cursor: pointer;
+    }
+
+    /* ── Mag7 individual cards ── */
+    .mag-card {
+      background: #181b24;
+      border: 0.5px solid #2a2d35;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color .2s, transform .2s;
+    }
+    .mag-card:hover { border-color: #4a5568; transform: translateY(-2px); }
+    .mag-thumb {
+      width: 100%;
+      height: 72px;
+      background: #1a1f2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 0.5px solid #2a2d35;
+      font-size: 26px;
+    }
+    .mag-body { padding: .75rem .9rem 1rem; flex: 1; display: flex; flex-direction: column; }
+    .mag-ticker {
+      font-size: 10px;
+      color: #5b8dd4;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: .25rem;
+    }
+    .mag-title { font-size: 13.5px; font-weight: 500; color: #dde0e8; margin-bottom: .5rem; }
+    .mag-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11.5px;
+      color: #5b8dd4;
+      text-decoration: none;
+      border: 0.5px solid #2a4a7a;
+      border-radius: 5px;
+      padding: 4px 9px;
+      align-self: flex-start;
+      transition: background .2s;
+    }
+    .mag-link:hover { background: #1a2d4a; }
+    .mag-link svg { width: 11px; height: 11px; }
+
+    /* ── Ticker tool card ── */
+    .ticker-card {
+      background: #181b24;
+      border: 0.5px solid #2a2d35;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color .2s, transform .2s;
+    }
+    .ticker-card:hover { border-color: #4a5568; }
+
+    .ticker-thumb {
+      width: 100%;
+      height: 90px;
+      background: linear-gradient(135deg, #0d1a2e 0%, #1a1f2e 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 0.5px solid #2a2d35;
+      gap: 10px;
+    }
+    .ticker-pulse {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #5b8dd4;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: .3; transform: scale(.8); }
+      50%       { opacity: 1;  transform: scale(1.2); }
+    }
+    .ticker-pulse:nth-child(2) { animation-delay: .3s; background: #3dd68c; }
+    .ticker-pulse:nth-child(3) { animation-delay: .6s; background: #e8b84b; }
+
+    .ticker-body { padding: .85rem 1rem 1.1rem; flex: 1; display: flex; flex-direction: column; }
+    .ticker-tag {
+      font-size: 11px;
+      color: #3dd68c;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: .3rem;
+    }
+    .ticker-title { font-size: 14.5px; font-weight: 500; color: #dde0e8; margin-bottom: .3rem; }
+    .ticker-desc { font-size: 12px; color: #6b7280; line-height: 1.55; flex: 1; margin-bottom: .85rem; }
+
+    .ticker-input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .ticker-input {
+      flex: 1;
+      background: #0f1117;
+      border: 0.5px solid #3a4050;
+      border-radius: 7px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: #e2e4e9;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .ticker-input::placeholder { color: #3a4050; letter-spacing: .04em; font-family: inherit; }
+    .ticker-input:focus { border-color: #5b8dd4; }
+
+    .ticker-btn {
+      background: #5b8dd4;
+      border: none;
+      border-radius: 7px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+      white-space: nowrap;
+    }
+    .ticker-btn:hover { background: #4a7bc4; }
+    .ticker-btn:active { transform: scale(.97); }
+
+    .ticker-note {
+      font-size: 11px;
+      color: #3a4050;
+      margin-top: 7px;
+    }
+
+    /* ── Section title ── */
+    .section-title {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem 0;
+      font-size: 13px;
+      color: #8b8f9a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 0.5px;
+      background: #2a2d35;
+    }
+
+    /* ── Back button ── */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #6b7280;
+      cursor: pointer;
+      border: 0.5px solid #2a2d35;
+      border-radius: 6px;
+      padding: 5px 11px;
+      background: transparent;
+      transition: color .15s, border-color .15s;
+    }
+    .back-btn:hover { color: #c4c8d4; border-color: #4a5568; }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 2.5rem 2rem;
+      text-align: center;
+      color: #3d404a;
+      font-size: 12px;
+      border-top: 0.5px solid #1e2130;
+      max-width: 1000px;
+      margin: 2rem auto 0;
+    }
+
+    /* ── View management ── */
+    .view { display: none; }
+    .view.active { display: block; }
   </style>
 </head>
 <body>
@@ -33,123 +362,356 @@
     <p>Automated reports built with R — covering macro indicators, equity valuations, and monetary policy across major economies.</p>
   </div>
 
-  <div class="grid">
+  <div class="breadcrumb" id="breadcrumb"></div>
 
-    <div class="card">
-      <div class="thumb">🇺🇸</div>
-      <div class="card-body">
-        <div class="card-tag">Geo · Macro</div>
-        <div class="card-title">United States</div>
-        <div class="card-desc">Fed policy, yield curve, Shiller CAPE, labour market and growth indicators.</div>
-        <a class="card-link" href="reports/us_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+  <!-- ══════════════════════════════════════════════
+       VIEW 0 — Top level (3 categories)
+  ══════════════════════════════════════════════ -->
+  <div class="view active" id="view-home">
+    <div class="grid">
+
+      <div class="cat-card" onclick="goTo('geo')">
+        <div class="cat-thumb">🌐</div>
+        <div class="cat-body">
+          <div class="cat-tag">Geo · Macro</div>
+          <div class="cat-title">Geo Reports</div>
+          <div class="cat-desc">Country and regional macro reports — Fed, ECB, SNB policy, growth, inflation, and leading indicators across major economies.</div>
+          <div class="cat-arrow">Explore <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="thumb">🇪🇺</div>
-      <div class="card-body">
-        <div class="card-tag">Geo · Macro</div>
-        <div class="card-title">Euro Area</div>
-        <div class="card-desc">ECB rates, Euribor, inflation, PMIs and fiscal dynamics across the eurozone.</div>
-        <a class="card-link" href="reports/eu_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      <div class="cat-card" onclick="goTo('market')">
+        <div class="cat-thumb">📊</div>
+        <div class="cat-body">
+          <div class="cat-tag">Market</div>
+          <div class="cat-title">Market Reports</div>
+          <div class="cat-desc">Cross-asset market reports — equities, fixed income, commodities, crypto and multi-asset risk indicators.</div>
+          <div class="cat-arrow">Explore <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="thumb">🇨🇭</div>
-      <div class="card-body">
-        <div class="card-tag">Geo · Macro</div>
-        <div class="card-title">Switzerland</div>
-        <div class="card-desc">SNB policy, KOF leading indicators, CHF dynamics and Swiss growth outlook.</div>
-        <a class="card-link" href="reports/ch_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      <div class="cat-card" onclick="goTo('share')">
+        <div class="cat-thumb">🔬</div>
+        <div class="cat-body">
+          <div class="cat-tag">Equity · Single Stock</div>
+          <div class="cat-title">Share Reports</div>
+          <div class="cat-desc">Individual equity analysis — Magnificent 7 deep dives and a custom ticker tool for any listed stock.</div>
+          <div class="cat-arrow">Explore <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="thumb">🌍</div>
-      <div class="card-body">
-        <div class="card-tag">Geo · Global</div>
-        <div class="card-title">World Overview</div>
-        <div class="card-desc">Global growth, trade dynamics, geopolitical risk and cross-country comparisons.</div>
-        <a class="card-link" href="reports/wrl_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       VIEW 1 — Geo Reports
+  ══════════════════════════════════════════════ -->
+  <div class="view" id="view-geo">
+    <div style="max-width:1000px;margin:1.5rem auto 0;padding:0 2rem;">
+      <button class="back-btn" onclick="goTo('home')">← Back</button>
+    </div>
+    <div class="grid">
+
+      <div class="rep-card">
+        <div class="rep-thumb">🇺🇸</div>
+        <div class="rep-body">
+          <div class="rep-tag">Geo · Macro</div>
+          <div class="rep-title">United States</div>
+          <div class="rep-desc">Fed policy, yield curve, Shiller CAPE, labour market and growth indicators.</div>
+          <a class="rep-link" href="reports/us_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="thumb">📈</div>
-      <div class="card-body">
-        <div class="card-tag">Market · Equity</div>
-        <div class="card-title">Equity Index</div>
-        <div class="card-desc">Major equity indices performance, valuations and cross-market comparisons.</div>
-        <a class="card-link" href="reports/equity_index_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      <div class="rep-card">
+        <div class="rep-thumb">🇪🇺</div>
+        <div class="rep-body">
+          <div class="rep-tag">Geo · Macro</div>
+          <div class="rep-title">Euro Area</div>
+          <div class="rep-desc">ECB rates, Euribor, inflation, PMIs and fiscal dynamics across the eurozone.</div>
+          <a class="rep-link" href="reports/eu_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="thumb">🔑</div>
-      <div class="card-body">
-        <div class="card-tag">Market · Multi-asset</div>
-        <div class="card-title">Key Index</div>
-        <div class="card-desc">Key cross-asset indicators — rates, spreads, FX and risk sentiment overview.</div>
-        <a class="card-link" href="reports/key_index_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      <div class="rep-card">
+        <div class="rep-thumb">🇨🇭</div>
+        <div class="rep-body">
+          <div class="rep-tag">Geo · Macro</div>
+          <div class="rep-title">Switzerland</div>
+          <div class="rep-desc">SNB policy, KOF leading indicators, CHF dynamics and Swiss growth outlook.</div>
+          <a class="rep-link" href="reports/ch_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="thumb">🥇</div>
-      <div class="card-body">
-        <div class="card-tag">Market · Commodities</div>
-        <div class="card-title">Gold Fundamentals</div>
-        <div class="card-desc">Gold drivers — real rates, USD, central bank demand and inflation expectations.</div>
-        <a class="card-link" href="reports/gold_fundamentals_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      <div class="rep-card">
+        <div class="rep-thumb">🌍</div>
+        <div class="rep-body">
+          <div class="rep-tag">Geo · Global</div>
+          <div class="rep-title">World Overview</div>
+          <div class="rep-desc">Global growth, trade dynamics, geopolitical risk and cross-country comparisons.</div>
+          <a class="rep-link" href="reports/wrl_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="thumb">₿</div>
-      <div class="card-body">
-        <div class="card-tag">Market · Crypto</div>
-        <div class="card-title">Crypto</div>
-        <div class="card-desc">CoinMarketCap data — dominance, correlations with traditional assets and momentum.</div>
-        <a class="card-link" href="reports/crypto_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      <div class="rep-card">
+        <div class="rep-thumb">📊</div>
+        <div class="rep-body">
+          <div class="rep-tag">Indicator</div>
+          <div class="rep-title">KOF Indicators</div>
+          <div class="rep-desc">KOF Economic Barometer and nowcasting signals for the Swiss and global economy.</div>
+          <a class="rep-link" href="reports/kof_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="thumb">🚀</div>
-      <div class="card-body">
-        <div class="card-tag">Market · Equity</div>
-        <div class="card-title">Magnificent 7</div>
-        <div class="card-desc">Deep dive on Apple, Microsoft, Nvidia, Alphabet, Amazon, Meta and Tesla.</div>
-        <a class="card-link" href="reports/magnificent_7_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       VIEW 2 — Market Reports
+  ══════════════════════════════════════════════ -->
+  <div class="view" id="view-market">
+    <div style="max-width:1000px;margin:1.5rem auto 0;padding:0 2rem;">
+      <button class="back-btn" onclick="goTo('home')">← Back</button>
+    </div>
+    <div class="grid">
+
+      <div class="rep-card">
+        <div class="rep-thumb">📈</div>
+        <div class="rep-body">
+          <div class="rep-tag">Market · Equity</div>
+          <div class="rep-title">Equity Index</div>
+          <div class="rep-desc">Major equity indices performance, valuations and cross-market comparisons.</div>
+          <a class="rep-link" href="reports/equity_index_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="thumb">🏦</div>
-      <div class="card-body">
-        <div class="card-tag">Market · Fixed Income</div>
-        <div class="card-title">Bond Market</div>
-        <div class="card-desc">Yield curves, sovereign spreads, credit conditions and duration risk.</div>
-        <a class="card-link" href="reports/bond_marketr_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      <div class="rep-card">
+        <div class="rep-thumb">🔑</div>
+        <div class="rep-body">
+          <div class="rep-tag">Market · Multi-asset</div>
+          <div class="rep-title">Key Index</div>
+          <div class="rep-desc">Key cross-asset indicators — rates, spreads, FX and risk sentiment overview.</div>
+          <a class="rep-link" href="reports/key_index_and_indicator_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="thumb">📊</div>
-      <div class="card-body">
-        <div class="card-tag">Indicator</div>
-        <div class="card-title">KOF Indicators</div>
-        <div class="card-desc">KOF Economic Barometer and nowcasting signals for the Swiss and global economy.</div>
-        <a class="card-link" href="reports/kof_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      <div class="rep-card">
+        <div class="rep-thumb">🥇</div>
+        <div class="rep-body">
+          <div class="rep-tag">Market · Commodities</div>
+          <div class="rep-title">Gold Fundamentals</div>
+          <div class="rep-desc">Gold drivers — real rates, USD, central bank demand and inflation expectations.</div>
+          <a class="rep-link" href="reports/gold_fundamentals_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
       </div>
-    </div>
 
+      <div class="rep-card">
+        <div class="rep-thumb">₿</div>
+        <div class="rep-body">
+          <div class="rep-tag">Market · Crypto</div>
+          <div class="rep-title">Crypto</div>
+          <div class="rep-desc">CoinMarketCap data — dominance, correlations with traditional assets and momentum.</div>
+          <a class="rep-link" href="reports/crypto_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </div>
+
+      <div class="rep-card">
+        <div class="rep-thumb">🏦</div>
+        <div class="rep-body">
+          <div class="rep-tag">Market · Fixed Income</div>
+          <div class="rep-title">Bond Market</div>
+          <div class="rep-desc">Yield curves, sovereign spreads, credit conditions and duration risk.</div>
+          <a class="rep-link" href="reports/bond_marketr_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       VIEW 3 — Share Reports (sub-categories)
+  ══════════════════════════════════════════════ -->
+  <div class="view" id="view-share">
+    <div style="max-width:1000px;margin:1.5rem auto 0;padding:0 2rem;">
+      <button class="back-btn" onclick="goTo('home')">← Back</button>
+    </div>
+    <div class="grid">
+
+      <!-- Magnificent 7 drill-down card -->
+      <div class="rep-card drill" onclick="goTo('mag7')">
+        <div class="rep-thumb">🚀</div>
+        <div class="rep-body">
+          <div class="rep-tag">Market · Equity</div>
+          <div class="rep-title">Magnificent 7</div>
+          <div class="rep-desc">Individual deep dives on Apple, Microsoft, Nvidia, Alphabet, Amazon, Meta and Tesla.</div>
+          <div class="rep-link" style="pointer-events:none;">Explore <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Custom ticker card -->
+      <div class="ticker-card">
+        <div class="ticker-thumb">
+          <div class="ticker-pulse"></div>
+          <div class="ticker-pulse"></div>
+          <div class="ticker-pulse"></div>
+        </div>
+        <div class="ticker-body">
+          <div class="ticker-tag">Live · Any Stock</div>
+          <div class="ticker-title">Custom Ticker Analysis</div>
+          <div class="ticker-desc">Enter any listed ticker to generate a full equity report — price, technicals, risk metrics and financial statements.</div>
+          <div class="ticker-input-row">
+            <input class="ticker-input" id="ticker-input" type="text" maxlength="6" placeholder="e.g. AAPL" />
+            <button class="ticker-btn" onclick="openTickerReport()">Run →</button>
+          </div>
+          <div class="ticker-note" id="ticker-note">Press Run to open the pre-generated report for this ticker.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       VIEW 4 — Magnificent 7 individual reports
+  ══════════════════════════════════════════════ -->
+  <div class="view" id="view-mag7">
+    <div style="max-width:1000px;margin:1.5rem auto 0;padding:0 2rem;">
+      <button class="back-btn" onclick="goTo('share')">← Back</button>
+    </div>
+    <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+
+      <div class="mag-card">
+        <div class="mag-thumb">🍎</div>
+        <div class="mag-body">
+          <div class="mag-ticker">AAPL</div>
+          <div class="mag-title">Apple</div>
+          <a class="mag-link" href="reports/share/mag7/magnificent_aapl_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </div>
+
+      <div class="mag-card">
+        <div class="mag-thumb">🪟</div>
+        <div class="mag-body">
+          <div class="mag-ticker">MSFT</div>
+          <div class="mag-title">Microsoft</div>
+          <a class="mag-link" href="reports/share/mag7/magnificent_msft_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </div>
+
+      <div class="mag-card">
+        <div class="mag-thumb">🎮</div>
+        <div class="mag-body">
+          <div class="mag-ticker">NVDA</div>
+          <div class="mag-title">Nvidia</div>
+          <a class="mag-link" href="reports/share/mag7/magnificent_nvda_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </div>
+
+      <div class="mag-card">
+        <div class="mag-thumb">🔍</div>
+        <div class="mag-body">
+          <div class="mag-ticker">GOOGL</div>
+          <div class="mag-title">Alphabet</div>
+          <a class="mag-link" href="reports/share/mag7/magnificent_googl_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </div>
+
+      <div class="mag-card">
+        <div class="mag-thumb">📦</div>
+        <div class="mag-body">
+          <div class="mag-ticker">AMZN</div>
+          <div class="mag-title">Amazon</div>
+          <a class="mag-link" href="reports/share/mag7/magnificent_amzn_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </div>
+
+      <div class="mag-card">
+        <div class="mag-thumb">👁️</div>
+        <div class="mag-body">
+          <div class="mag-ticker">META</div>
+          <div class="mag-title">Meta</div>
+          <a class="mag-link" href="reports/share/mag7/magnificent_meta_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </div>
+
+      <div class="mag-card">
+        <div class="mag-thumb">⚡</div>
+        <div class="mag-body">
+          <div class="mag-ticker">TSLA</div>
+          <div class="mag-title">Tesla</div>
+          <a class="mag-link" href="reports/share/mag7/magnificent_tsla_report_html.html">View report <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <div class="footer">
     Generated with R · Sources: FRED · Yahoo Finance · ECB · Eurostat · OECD · IMF · KOF · CoinMarketCap
   </div>
+
+  <script>
+    const labels = {
+      home:   'Home',
+      geo:    'Geo Reports',
+      market: 'Market Reports',
+      share:  'Share Reports',
+      mag7:   'Magnificent 7'
+    };
+    const parents = {
+      home:   null,
+      geo:    'home',
+      market: 'home',
+      share:  'home',
+      mag7:   'share'
+    };
+
+    let current = 'home';
+
+    function goTo(view) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + view).classList.add('active');
+      current = view;
+      renderBreadcrumb(view);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderBreadcrumb(view) {
+      const bc = document.getElementById('breadcrumb');
+      const chain = [];
+      let v = view;
+      while (v) {
+        chain.unshift(v);
+        v = parents[v];
+      }
+      if (chain.length <= 1) { bc.innerHTML = ''; return; }
+      bc.innerHTML = chain.map((v, i) => {
+        if (i === chain.length - 1) {
+          return '<span class="current">' + labels[v] + '</span>';
+        }
+        return '<span onclick="goTo(\'' + v + '\')">' + labels[v] + '</span><span class="sep">›</span>';
+      }).join('');
+    }
+
+    function openTickerReport() {
+      const raw = document.getElementById('ticker-input').value.trim().toUpperCase();
+      if (!raw) {
+        document.getElementById('ticker-note').textContent = 'Please enter a ticker symbol.';
+        document.getElementById('ticker-note').style.color = '#e87a5a';
+        return;
+      }
+      const url = 'reports/share/custom/stock_' + raw + '_report_html.html';
+      document.getElementById('ticker-note').textContent = 'Opening report for ' + raw + '…';
+      document.getElementById('ticker-note').style.color = '#3dd68c';
+      window.open(url, '_blank');
+      setTimeout(() => {
+        document.getElementById('ticker-note').textContent = 'Press Run to open the pre-generated report for this ticker.';
+        document.getElementById('ticker-note').style.color = '#3a4050';
+      }, 3000);
+    }
+
+    document.getElementById('ticker-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') openTickerReport();
+    });
+  </script>
 
 </body>
 </html>
